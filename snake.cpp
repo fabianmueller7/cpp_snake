@@ -1,7 +1,6 @@
 #include <iostream>
 #include<windows.h>
 #include <conio.h>
-#include <vector>
 using namespace std;
 
 void clear() 
@@ -71,6 +70,7 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
 {
     int length = startinglength;
     COORD cposition = startingposition;
+    int heading = 1;
 
     clear();
 
@@ -80,6 +80,7 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
         updatefield(field, &length, fieldheight, fieldwidth, cposition);
         cposition.X -= 1; 
         display(field, fieldheight, fieldwidth);
+        _getch();
     }
 }
 
