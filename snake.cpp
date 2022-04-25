@@ -17,9 +17,68 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
 }
 
-void control()
+void getuserinput(int* direction)
 {
+    char ch;
+    ch = _getch();
 
+    //up
+    if(ch == -72)
+    {
+        *direction = 0;
+    }
+    //down
+    else if(ch == -80)
+    {
+        *direction = 2; 
+    }
+    //left
+    else if(ch == -75)
+    {
+        *direction = 3;
+    }
+    //right
+    else if(ch == -77)
+    {
+        *direction = 1;
+    }
+}
+
+void control(int* direction, COORD* cposition, int width, int height)
+{
+    getuserinput(direction);
+    switch(*direction)
+    {
+        case 0: 
+            (*cposition).Y += 1;
+            break;
+        case 2:
+            (*cposition).Y -= 1;
+            break;
+        case 1:
+            (*cposition).X += 1;
+            break;
+        case 3:
+            (*cposition).X -= 1;
+            break;
+    }
+
+    if(cposition->Y > height)
+    {
+        (*cposition).X = 0;
+    }
+    if(cposition->Y < 0)
+    {
+        (*cposition).X = height;
+    }
+    if(cposition->X < 0)
+    {
+        (*cposition).X = width;
+    }
+    if(cposition->X > width)
+    {
+        (*cposition).X = 0;
+    }
 }
 
 void display(int **field, int height, int width) 
@@ -70,17 +129,15 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
 {
     int length = startinglength;
     COORD cposition = startingposition;
-    int heading = 1;
+    int heading = 3;
 
     clear();
 
     while(true) 
     {
-        Sleep(500);
         updatefield(field, &length, fieldheight, fieldwidth, cposition);
-        cposition.X -= 1; 
         display(field, fieldheight, fieldwidth);
-        _getch();
+        control(&heading, &cposition, fieldwidth, fieldheight);
     }
 }
 
