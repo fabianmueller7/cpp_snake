@@ -23,22 +23,22 @@ void getuserinput(int* direction)
     ch = _getch();
 
     //up
-    if(ch == -72)
+    if(ch == 'w')
     {
         *direction = 0;
     }
     //down
-    else if(ch == -80)
+    else if(ch == 's')
     {
         *direction = 2; 
     }
     //left
-    else if(ch == -75)
+    else if(ch == 'a')
     {
         *direction = 3;
     }
     //right
-    else if(ch == -77)
+    else if(ch == 'd')
     {
         *direction = 1;
     }
@@ -46,38 +46,28 @@ void getuserinput(int* direction)
 
 void control(int* direction, COORD* cposition, int width, int height)
 {
+    int lastdirection = *direction;
     getuserinput(direction);
+    
+    if(lastdirection+2 == *direction || lastdirection-2 == *direction)
+    {
+        *direction = lastdirection;
+    }
+
     switch(*direction)
     {
         case 0: 
-            (*cposition).Y += 1;
+            cposition->Y = (cposition->Y-1+height)%height;
             break;
         case 2:
-            (*cposition).Y -= 1;
+            cposition->Y = (cposition->Y+1+height)%height;
             break;
         case 1:
-            (*cposition).X += 1;
+            cposition->X = (cposition->X+1+width)%width;;
             break;
         case 3:
-            (*cposition).X -= 1;
+            cposition->X = (cposition->X-1+width)%width;
             break;
-    }
-
-    if(cposition->Y > height)
-    {
-        (*cposition).X = 0;
-    }
-    if(cposition->Y < 0)
-    {
-        (*cposition).X = height;
-    }
-    if(cposition->X < 0)
-    {
-        (*cposition).X = width;
-    }
-    if(cposition->X > width)
-    {
-        (*cposition).X = 0;
     }
 }
 
@@ -105,6 +95,19 @@ void display(int **field, int height, int width)
     }
 }
 
+void generatenewfruit(int **field, int height, int width)
+{
+    int x;
+    int y;
+
+    do{
+        y = rand()%height;
+        x = rand()%width;
+    }while (field[y][x] > 0);
+
+    field[y][x] -= 1; 
+}
+
 void updatefield(int **field, int* snakelength, int height, int width, COORD cposition)
 {
     for (int h = 0; h < height; h++)
@@ -120,6 +123,7 @@ void updatefield(int **field, int* snakelength, int height, int width, COORD cpo
 
     if(field[cposition.Y][cposition.X] == -1){
         *snakelength += 1;
+        generatenewfruit(field, height, width);
     }
 
     field[cposition.Y][cposition.X] = *snakelength;
