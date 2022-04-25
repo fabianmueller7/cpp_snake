@@ -4,16 +4,23 @@
 #include <vector>
 using namespace std;
 
-void clear() {
+void clear() 
+{
     // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
     std::cout << "\x1B[2J\x1B[H";
 }
 
-void gotoxy(int x, int y) {
+void gotoxy(int x, int y) 
+{
     COORD c;
     c.X=x;
     c.Y=y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
+
+void control()
+{
+
 }
 
 void display(int **field, int height, int width) 
@@ -40,7 +47,7 @@ void display(int **field, int height, int width)
     }
 }
 
-void updatefield(int **field, int snakelength, int height, int width, COORD cposition)
+void updatefield(int **field, int* snakelength, int height, int width, COORD cposition)
 {
     for (int h = 0; h < height; h++)
     {
@@ -53,7 +60,11 @@ void updatefield(int **field, int snakelength, int height, int width, COORD cpos
         }
     }
 
-    field[cposition.Y][cposition.X] = snakelength;
+    if(field[cposition.Y][cposition.X] == -1){
+        *snakelength += 1;
+    }
+
+    field[cposition.Y][cposition.X] = *snakelength;
 }
 
 void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, COORD startingposition) 
@@ -66,7 +77,8 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
     while(true) 
     {
         Sleep(500);
-        updatefield(field, length, fieldheight, fieldwidth, cposition);
+        updatefield(field, &length, fieldheight, fieldwidth, cposition);
+        cposition.X -= 1; 
         display(field, fieldheight, fieldwidth);
     }
 }
@@ -93,7 +105,7 @@ int** setupfield(int height, int width)
 
 void startgame() 
 {
-    int snakelength = 4;
+    int snakelength = 2;
     int fieldheight = 10;
     int fieldwidth = 10;
     COORD startingposition;
