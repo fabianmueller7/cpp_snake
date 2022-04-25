@@ -44,7 +44,7 @@ void getuserinput(int* direction)
     }
 }
 
-void control(int* direction, COORD* cposition, int width, int height)
+void movement(int* direction, COORD* cposition, int width, int height)
 {
     int lastdirection = *direction;
     getuserinput(direction);
@@ -108,7 +108,7 @@ void generatenewfruit(int **field, int height, int width)
     field[y][x] -= 1; 
 }
 
-void updatefield(int **field, int* snakelength, int height, int width, COORD cposition)
+void updatefield(int **field, int* snakelength, int height, int width, COORD cposition, boolean* lost)
 {
     for (int h = 0; h < height; h++)
     {
@@ -121,10 +121,17 @@ void updatefield(int **field, int* snakelength, int height, int width, COORD cpo
         }
     }
 
-    if(field[cposition.Y][cposition.X] == -1){
+    if(field[cposition.Y][cposition.X] == -1)
+    {
         *snakelength += 1;
         generatenewfruit(field, height, width);
     }
+
+    if(field[cposition.Y][cposition.X] > 0)
+    {
+        *lost = true;
+    }
+
 
     field[cposition.Y][cposition.X] = *snakelength;
 }
@@ -134,14 +141,15 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
     int length = startinglength;
     COORD cposition = startingposition;
     int heading = 3;
+    boolean lost = false;
 
     clear();
 
-    while(true) 
+    while(lost == false) 
     {
-        updatefield(field, &length, fieldheight, fieldwidth, cposition);
+        updatefield(field, &length, fieldheight, fieldwidth, cposition, &lost);
         display(field, fieldheight, fieldwidth);
-        control(&heading, &cposition, fieldwidth, fieldheight);
+        movement(&heading, &cposition, fieldwidth, fieldheight);
     }
 }
 
