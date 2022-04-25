@@ -75,8 +75,6 @@ void display(int **field, int height, int width)
 {
         for (int h = 0; h < height; h++)
     {
-        cout << endl;
-
         for (int w = 0; w < width; w++)
         {
             gotoxy(w + 1, h + 1);
