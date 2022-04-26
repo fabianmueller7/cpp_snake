@@ -21,28 +21,34 @@ void gotoxy(int x, int y)
 void getuserinput(int* direction)
 {
     char ch;
+    char lastdirection = *direction;
     while(true){
         ch = _getch();
 
+
         //up 
-        if(ch == 'w')
+        if(ch == 'w' && lastdirection != 9)
         {
             *direction = 5; //Bits 0101
+            lastdirection = 5;
         }
         //down
-        else if(ch == 's')
+        else if(ch == 's' && lastdirection != 5)
         {
             *direction = 9; //Bits 1001
+            lastdirection = 9;
         }
         //left
-        else if(ch == 'a')
+        else if(ch == 'a' && lastdirection != 10)
         {
             *direction = 6; //Bits 0110
+            lastdirection = 6;
         }
         //right
-        else if(ch == 'd')
+        else if(ch == 'd' && lastdirection != 6)
         {
             *direction = 10; //Bits 1010
+            lastdirection = 10;
         }
     }
 }
