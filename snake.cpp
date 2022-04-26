@@ -60,7 +60,7 @@ void movement(int* direction, COORD* cposition, int width, int height)
 
 void display(int **field, int height, int width) 
 {
-        for (int h = 0; h < height; h++)
+    for (int h = 0; h < height; h++)
     {
         for (int w = 0; w < width; w++)
         {
@@ -75,6 +75,18 @@ void display(int **field, int height, int width)
             }
             else {
                 cout << " ";
+            }
+            
+            if(h == 0 || w == 0 )
+            {
+                gotoxy(w, h);
+                cout << "#";
+            }
+
+            if(h == height-1 || w == width-1 )
+            {
+                gotoxy(w+2, h);
+                cout << "#";
             }
         }
     }
