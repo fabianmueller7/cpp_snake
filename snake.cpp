@@ -25,7 +25,6 @@ void getuserinput(int* direction)
     while(true){
         ch = _getch();
 
-
         //up 
         if(ch == 'w' && lastdirection != 9)
         {
@@ -55,7 +54,7 @@ void getuserinput(int* direction)
 
 void movement(int* direction, COORD* cposition, int width, int height)
 {
-    //Bits of direction
+    //Bits of direction 9=UP, 5=DOWN, 10=LEFT, 6
     //1. bit if Y
     //2. bit if X
     //3. bit if -
