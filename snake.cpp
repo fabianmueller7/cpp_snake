@@ -1,6 +1,7 @@
 #include <iostream>
 #include<windows.h>
 #include <conio.h>
+#include<thread>
 using namespace std;
 
 void clear() 
@@ -22,53 +23,40 @@ void getuserinput(int* direction)
     char ch;
     ch = _getch();
 
-    //up
+    //up 
     if(ch == 'w')
     {
-        *direction = 0;
+        *direction = 5; //Bits 0101
     }
     //down
     else if(ch == 's')
     {
-        *direction = 2; 
+        *direction = 9; //Bits 1001
     }
     //left
     else if(ch == 'a')
     {
-        *direction = 3;
+        *direction = 6; //Bits 0110
     }
     //right
     else if(ch == 'd')
     {
-        *direction = 1;
+        *direction = 10; //Bits 1010
     }
 }
 
 void movement(int* direction, COORD* cposition, int width, int height)
 {
-    int lastdirection = *direction;
     getuserinput(direction);
     
-    if(lastdirection+2 == *direction || lastdirection-2 == *direction)
-    {
-        *direction = lastdirection;
-    }
 
-    switch(*direction)
-    {
-        case 0: 
-            cposition->Y = (cposition->Y-1+height)%height;
-            break;
-        case 2:
-            cposition->Y = (cposition->Y+1+height)%height;
-            break;
-        case 1:
-            cposition->X = (cposition->X+1+width)%width;;
-            break;
-        case 3:
-            cposition->X = (cposition->X-1+width)%width;
-            break;
-    }
+    //Bits of direction
+    //1. bit if Y
+    //2. bit if X
+    //3. bit if -
+    //4. bit if +
+    cposition->Y = (cposition->Y + ((*direction >> 2) & 1)*((*direction >> 0) & 1)*(-1) + ((*direction >> 3) & 1)*((*direction >> 0) & 1)*(1) + height)%height;
+    cposition->X = (cposition->X + ((*direction >> 2) & 1)*((*direction >> 1) & 1)*(-1) + ((*direction >> 3) & 1)*((*direction >> 1) & 1)*(1) + width)%width;
 }
 
 void display(int **field, int height, int width) 
@@ -140,8 +128,10 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
     COORD cposition = startingposition;
     int heading = 3;
     boolean lost = false;
+    //thread input_thread(getuserinput, &heading)
 
     clear();
+    
 
     while(lost == false) 
     {
