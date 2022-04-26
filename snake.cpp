@@ -77,17 +77,29 @@ void display(int **field, int height, int width)
                 cout << " ";
             }
             
-            if(h == 0 || w == 0 )
+            if(h == 0 )
             {
-                gotoxy(w, h);
+                gotoxy(w+1, h);
                 cout << "#";
             }
 
-            if(h == height-1 || w == width-1 )
+            if(w == 0 )
             {
-                gotoxy(w+2, h);
+                gotoxy(w, h+1);
                 cout << "#";
             }
+
+            if(w == width-1 )
+            {
+                gotoxy(w+2, h+1);
+                cout << "#";
+            }
+
+            if(h == height-1 )
+            {
+                gotoxy(w+1, h+2);
+                cout << "#";
+            }  
         }
     }
 }
