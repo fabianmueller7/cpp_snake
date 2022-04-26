@@ -162,10 +162,10 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
     
     while(lost == false) 
     {
+        movement(&heading, &cposition, fieldwidth, fieldheight);
         updatefield(field, &length, fieldheight, fieldwidth, cposition, &lost);
         display(field, fieldheight, fieldwidth);
-        movement(&heading, &cposition, fieldwidth, fieldheight);
-        Sleep(500);
+        Sleep(250);
     }
 }
 
