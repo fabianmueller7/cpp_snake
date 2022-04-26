@@ -21,35 +21,34 @@ void gotoxy(int x, int y)
 void getuserinput(int* direction)
 {
     char ch;
-    ch = _getch();
+    while(true){
+        ch = _getch();
 
-    //up 
-    if(ch == 'w')
-    {
-        *direction = 5; //Bits 0101
-    }
-    //down
-    else if(ch == 's')
-    {
-        *direction = 9; //Bits 1001
-    }
-    //left
-    else if(ch == 'a')
-    {
-        *direction = 6; //Bits 0110
-    }
-    //right
-    else if(ch == 'd')
-    {
-        *direction = 10; //Bits 1010
+        //up 
+        if(ch == 'w')
+        {
+            *direction = 5; //Bits 0101
+        }
+        //down
+        else if(ch == 's')
+        {
+            *direction = 9; //Bits 1001
+        }
+        //left
+        else if(ch == 'a')
+        {
+            *direction = 6; //Bits 0110
+        }
+        //right
+        else if(ch == 'd')
+        {
+            *direction = 10; //Bits 1010
+        }
     }
 }
 
 void movement(int* direction, COORD* cposition, int width, int height)
 {
-    getuserinput(direction);
-    
-
     //Bits of direction
     //1. bit if Y
     //2. bit if X
@@ -126,18 +125,18 @@ void gameloop(int **field, int startinglength, int fieldheight, int fieldwidth, 
 {
     int length = startinglength;
     COORD cposition = startingposition;
-    int heading = 3;
+    int heading = 6;
     boolean lost = false;
-    //thread input_thread(getuserinput, &heading)
-
+    thread input_thread(getuserinput, &heading);
+    input_thread.detach();
     clear();
     
-
     while(lost == false) 
     {
         updatefield(field, &length, fieldheight, fieldwidth, cposition, &lost);
         display(field, fieldheight, fieldwidth);
         movement(&heading, &cposition, fieldwidth, fieldheight);
+        Sleep(500);
     }
 }
 
